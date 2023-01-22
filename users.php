@@ -259,18 +259,12 @@ if($do == 'mange'){
                                       'xavatar'=>$avatar)) ; 
                 $cou = $stmt ->rowcount();  
                 //echo sucsess--------------------------
-               if ($cou == 0 ){
+              
 
                 $mge = $cou . ' Insert'; 
                 //-redirect to back---------------------
-                redirhome($mge,'info','back');
+                redirhome($mge,'info','users.php?do=mange');
 
-               }else{
-
-                $mge = $cou . ' Insert'; 
-                //-redirect to back---------------------
-                redirhome($mge,'info','user.php');
-               }
           
                      
                   }
@@ -472,13 +466,13 @@ if($do == 'mange'){
            
               $mge =  $cou . '   Update'; 
                //-redirect to back---------------------
-               redirhome($mge,'info','user');
+               redirhome($mge,'info','users.php?do=mange');
                       
                   }else{
                        
                 $mge = 'User exist'; 
                //-redirect to back---------------------
-               redirhome($mge,'info','user');
+               redirhome($mge,'info','back');
               }}
 
         }else{

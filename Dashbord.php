@@ -27,7 +27,7 @@ if(isset($_SESSION['username'])){
 
           <!-- Page Heading ----------------------->
           <div class="d-sm-flex align-items-center justify-content-between mb-4" style="margin-top :50px;">
-            <h1 class="h3 mb-0 text-gray-800" style="color:#fff" >Dashboard</h1>
+            <h1 class="h3 mb-0 text-gray-800" style="color:#fff" >لوحة التحكم </h1>
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
           </div><hr>
 
@@ -40,8 +40,8 @@ if(isset($_SESSION['username'])){
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> Total User</div>
-                        <a href="members.php?do=mange"> <div class="h5 mb-0 font-weight-bold text-gray-800"><?php //echo coutrow('user_id' , 'users' ) ;?></div></a>
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> المستخدمين </div>
+                        <a href="members.php?do=mange"> <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo coutrow('id' , 'user' ) ;?></div></a>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-users fa-5x text-gray-300 text-primary"></i>
@@ -57,10 +57,10 @@ if(isset($_SESSION['username'])){
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">AUTH Mambers</div>
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">الكروت </div>
                       <a href="members.php?page=panding">
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <?php //echo checkitm('auth' , 'users',0 ) ;?></div></a>
+                        <?php echo coutrow('card' , 'user' )  ;?></div></a>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-user fa-5x text-gray-300 text-success"></i>
@@ -76,19 +76,19 @@ if(isset($_SESSION['username'])){
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Door</div>
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1"> الابواب</div>
                       <a href="items.php?do=mange">
                         <div class="row no-gutters align-items-center">
                         <div class="col-auto">
                           <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
-                            <?php// echo coutrow('id' , 'door' ) ;?>
+                            <?php  echo coutrow('id' , 'door' ) ;?>
                             </div>
                         </div>
                          <div class="col">
-                          <div class="progress progress-sm mr-2">
-                           <!-- <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
--->
-                          </div>
+                        <!-- <div class="progress progress-sm mr-2">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+
+                          </div>-->
                         </div>
                       </div></a>
                     </div>
@@ -107,10 +107,10 @@ if(isset($_SESSION['username'])){
                 <div class="card-body ">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1"> log</div>
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1"> الحركات </div>
                          <a href="comments.php?do=mange">
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <?php //echo coutrow('com_id' , 'comments' ) ;?>
+                        <?php echo coutrow('id' , 'logs' ) ;?>
                         </div></a>
                         </div>
                        <div class="col-auto">
@@ -133,39 +133,66 @@ if(isset($_SESSION['username'])){
               <div class="card shadow mb-4 ">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-users"></i> Last <?php //echo $limit_user ?> User </h6>
+                  <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-users"></i> اخر خمس حركات     </h6>
                 
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
                   <div class="chart-area">
                       
-                 <?php //---check record found ----------
-                   //if (!empty($cols_user)){ ?>
+                 <?php
+                 // select all users databasea--------------------
+                        $stmt =$con->prepare("SELECT   door.door,
+                        door.place,
+                        user.fname,
+                        user.auth,
+                        user.card,
+                        user.avatar,
+                        logs.id,
+                        logs.date_status ,
+                        logs.status 
+                    from
+                        door,
+                        
+                        user,
+                        logs 
+                    where 
+                          door.id = logs.door and  
+                          user.id = logs.user
+                    ORDER BY id DESC  limit 5");  
+
+                    $stmt->execute();
+                    $log_user = $stmt->fetchAll();
+                 
+                 //---check record found ----------
+                  if (!empty($log_user)){ ?>
                       
                        <!--insied box last user-->
                      <table class="table table-sm  table-striped table-light">      
                      <tbody>
                     <?php
-                       /*foreach($cols_user as $col) {
+                       foreach($log_user as $col) {
                          
-                             echo   '<tr>';
-                             echo   '<div class="logpass">';
-                             echo   '<th scope="row">' .  $col['user_name'] . '</th>';
-                             echo   '<td class="p-3 showpass">';
-                             echo   '<a class="btn  btn-sm btn-success " href="members.php?do=edit&id=' . $col['user_id'] .'" ><i class="fa fa-edit "></i> Edit</a>' ;
-                            check found user apend to show buttum--------------- 
-                                if ($col['reg_sta'] == 0){  
-                            echo   '<a class="btn btn-sm btn-info " style="margin: 5px" href="members.php?do=active&id=' . $col['user_id'] .'"><i class="fa fa-check "></i> active</a>';
-                             }
+                      echo   '<tr>';
+                      echo   '<div class="logpass">';
+                     
+                      echo   '<td class="p-3 showpass">';
+                      echo   '<th scope="row">' .  $col['door'] . '  فى  ' . $col['place'] . '</th>';
+
+                        //row allow door---
+                        if ($col['status']==1){ echo  ' <td class = "font-weight-bold text-success ">
+                          فتح</td>'; }else{  echo ' <td class = " font-weight-bold text-danger "> غلق </td>';};  
+  
+                      echo   '<th scope="row">' .  $col['fname'] . '</th>';
+                    
                             echo   '</td>';
                             echo   '</div>';
-                            echo   '</tr>';
-                  }  */?>
+                            echo    '</tr>';
+                          }  ?>
                           </tbody>
                     </table>  
-                    <h6>Not Record </h6>
-                     <?php //}else{echo '<div class="alert alert-dark">Not Record </div>';}?>    
+                    
+                     <?php }else{echo '<div class="alert alert-dark">Not Record </div>';}?>    
                                       
                   </div>
                 </div>
@@ -173,55 +200,60 @@ if(isset($_SESSION['username'])){
             </div>
 
             <!-- Last items---------------->
-            <div class="col-xl-6 col-lg-6">
+            
+            <div class="col-xl-6 col-lg-6"  >
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-tags"></i> Last <?php// echo $limit_item ?> Items</h6>
+                  <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-tags"></i> حالة الابواب </h6>
            
                 </div>
                 <!-- Card Body -->
                 <div class="card-body dachcar">
                   <div class="chart-pie pt-1 pb-2">
                       
-                 <?php //---check record found ----------
-                  // if (!empty($cols_item)){ ?>
+                 
                       
                       <!--insied box last user-->
-                     <table class="table table-sm  table-striped ">      
+                     <table class="table table-sm  table-stripe">      
                      <tbody>
-                    <?php
-                      /*  foreach($cols_item as $col) {
-                         
-                             echo   '<tr >';
-                             echo   '<div class="logpass">';
-                             echo   '<th scope="row">' .  $col['name'] . '</th>';
-                             echo   '<td class="p-3 showpass">';
-                             echo   '<a class="btn  btn-sm btn-success " href="items.php?do=edit&id=' . $col['item_id'] .'" ><i class="fa fa-edit "></i> Edit</a>' ;
-                            // check found user apend to show buttum--------------- 
-                                if ($col['approve'] == 0){  
-                            echo   '<a class="btn btn-sm btn-info " style="margin: 5px"  href="items.php?do=active&id=' . $col['item_id'] .'"><i class="fa fa-check "></i> Approve</a>';
-                             }
-                            echo   '</td>';
-                            echo   '</div>';
-                            echo   '</tr>';
-                   } */?>
+                     <th  scope="row">
+                      <tr>
+                      
+                      <tr>
+                      <div  onload="Get_Data();">
+                         <div id = "fatch" style="padding: 5px; border-radius:20px ; text-align: center;" > </div>
+                     </div>
+                        </td>
+                      </tr>
+          
+                      <tr>
+                      <td>
+                       door 2
+                        </th>
+                        </td>
+
+                        <tr>
+                      <td>
+                       door 3
+                        </td>
+
+                   
+                      
+                        </th>
                           </tbody>
                     </table> 
-                    <h6>Not Record </h6>
-                      <?php //}else{echo '<div class="alert alert-dark">Not Record </div>';}?>
-                      
                       
                   </div>
                   <div class="mt-2 text-center small">
                     <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Direct
+                      <i class="fas fa-circle text-success"></i> مفتوح 
                     </span>
                     <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Add
+                      <i class="fas fa-circle text-danger"></i> مغلق
                     </span>
                     <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Approve
+                      <i class="fas fa-circle text-info"></i> غير معروف
                     </span>
                   </div>
                 </div>
@@ -234,7 +266,7 @@ if(isset($_SESSION['username'])){
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-tags"></i> Last 3 logs</h6>
+                  <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-tags"></i>الكروت المتاحة    </h6>
            
                 </div>
                 <!-- Card Body -->
@@ -283,39 +315,34 @@ if(isset($_SESSION['username'])){
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Content Row--> 
-         <div class="row">
               
-
-
-            <!-- Content Column
             <div class="col-lg-6 mb-4">
 
-              <!-- Project Card Example 
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Reports</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">تقارير -غير مفعله</h6>
                 </div>
                 <div class="card-body">
                   <h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
                   <div class="progress mb-4">
                     <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
+                  <h4 class="small font-weight-bold"> Tracking <span class="float-right">40%</span></h4>
                   <div class="progress mb-4">
                     <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
+                  <h4 class="small font-weight-bold">
+                     Database <span class="float-right">60%</span></h4>
                   <div class="progress mb-4">
                     <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
+                  <h4 class="small font-weight-bold">
+                     Details <span class="float-right">80%</span></h4>
                   <div class="progress mb-4">
                     <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
+                  <h4 class="small font-weight-bold">
+                     Setup <span class="float-right">Complete!</span></h4>
                   <div class="progress">
                     <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
@@ -323,7 +350,15 @@ if(isset($_SESSION['username'])){
               </div>
 
 
-            </div> --> 
+            </div>  
+          </div>
+
+          <!-- Content Row--> 
+         <div class="row">
+              
+
+
+         
               
             
         

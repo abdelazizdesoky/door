@@ -25,18 +25,13 @@ if (isset($_GET['do'])){$do = $_GET['do'];}else{$do='mange';}
 //--------------------------------------------------------------   
 if($do == 'mange'){ 
     
-            //mamber panding ------------------------
-           /* $qurey = '';
-
-            if (isset($_GET['page']) && $_GET['page'] =='panding'){
-                $qurey = 'AND  prim = 0';
-            } */
+        
     
     // select all users databasea--------------------
     $stmt =$con->prepare("SELECT * FROM user  ");  
     $stmt->execute();
     $rows = $stmt->fetchAll();
-   
+    $couitem =$stmt->rowcount() ;
     
         
     ?>
@@ -56,6 +51,7 @@ if($do == 'mange'){
                           <th scope="col">User</th>
                           <th scope="col">Full name</th>
                           <th scope="col">Position</th>
+                          <th scope="col">Card</th>
                           <th scope="col">Allow open </th>
                           <th scope="col">Allow login </th>
                           <th scope="col">Date Regster</th>
@@ -69,10 +65,12 @@ if($do == 'mange'){
                             echo '<th scope="row">'.$row['id'].'</th>';
                              echo   ' <td><img src="upload/avatar/'.$row['avatar'].'"alt="'.$row['avatar'].'"></td>'; 
                             echo   ' <td>'.$row['user'].'</td>'; 
-                            echo   ' <td>'.$row['name'].'</td>';
+                            echo   ' <td>'.$row['fname'].'</td>';
                             echo   ' <td>'.$row['position'].'</td>';
+                            echo   ' <td>'.$row['card'].'</td>';
                             //row allow door---
-                            if ($row['auth']==1){ echo  ' <td class = "font-weight-bold text-success ">Allow Open</td>'; }else{  echo ' <td class = " font-weight-bold text-danger ">Deny Open</td>';};
+                            if ($row['auth']==1){ echo  ' <td class = "font-weight-bold text-success ">
+                              Allow Open</td>'; }else{  echo ' <td class = " font-weight-bold text-danger ">Deny Open</td>';};
                             //row login ----
                             if ($row['prim']==1){ echo  ' <td class = "font-weight-bold text-success ">Allow Login</td>'; }else{  echo ' <td class = "font-weight-bold text-danger ">Deny Login</td>';};
                             echo   ' <td>'.$row['date_reg'].'</td>';
@@ -87,6 +85,12 @@ if($do == 'mange'){
                              echo  '</tr>';}
                         ?>
                               </tbody>
+                              <tbody>
+                         
+                         <th scope="row">#</th>
+                          <td colspan="5"><strong>Total Users</strong></td>
+                          <td colspan="3"><strong><?php echo $couitem  ?></strong></td>
+                        </tbody> 
              </table>
           <?php }else{echo '<div class="alert alert-info">Not Record </div>';}?>  
       </div>
@@ -124,6 +128,10 @@ if($do == 'mange'){
                                 <label>Position</label>
                              
                              <input type="text" name='position'  class= 'form-control' required='required' placeholder='Insert Postion' autocomplete='off' />
+
+                             <label>Card</label>
+                             
+                             <input type="text" name='card'  class= 'form-control' required='required' placeholder='Insert Postion' autocomplete='off' />
                              
                                 <!---select auth---------------------> 
                                 <div class="form-group">
@@ -132,8 +140,7 @@ if($do == 'mange'){
                                         <option value="1" >Allow Open</option>
                                         <option value="0" >Dany Open</option>
                                         
-                                    </select>
-                                  </div>
+                                        </select>
                                    <!---select auth---------------------> 
                                 <div class="form-group">
                                     <label for="exampleFormControlSelect2">Allow login</label>
@@ -170,6 +177,7 @@ if($do == 'mange'){
                 $pass     = $_POST['pass'];
                 $fname    = $_POST['fullname'];
                 $position    = $_POST['position'];
+                $card    = $_POST['card'];
                 $hashpass = sha1($pass);
                  $auth    = $_POST['auth'];
                 $prim     = $_POST['prim']; 
@@ -184,11 +192,10 @@ if($do == 'mange'){
                 //extantion allow to upload--------
                  $avatarallow=array("jpg","jpeg","png","gif");
                    
+                 
                  $avatarex = explode('.', $nameav);
-                 $avatarexend= end($avatarex) ;
-                  
+                 $avatarexend= end($avatarex) ;                  
                
-
                 // validate the form ----------------------------------------
                 $error = array();
                    
@@ -224,10 +231,10 @@ if($do == 'mange'){
                         if (!in_array($avatarexend,$avatarallow)){
                          $error[] = "Not allow extension";
                         }
-                          //  if ($sizeav>100000){
-                       //  $error[] = "Image Size is larger than 100mb";
+                         if ($sizeav>10000000){
+                        $error[] = "Image Size is larger than 100mb";
                             
-                      //  }
+                      }
               }else{
                    $error[] = "No file found";  
                 }
@@ -247,13 +254,14 @@ if($do == 'mange'){
                      
                 //update data-----------------------
                 $stmt = $con->prepare('INSERT INTO
-                                   user(user,pass,name,position,auth,prim,avatar,date_reg) 
-                                  VALUES(:xname,:xpass,:xfname,:xposition,:xauth,:xprim,:xavatar,now())') ;
+                                   user(user,pass,fname,position,card,auth,prim,avatar,date_reg) 
+                                  VALUES(:xname,:xpass,:xfname,:xposition,:xcard,:xauth,:xprim,:xavatar,now())') ;
                       
                 $stmt ->execute(array('xname'=>$name,
                                       'xpass'=>$hashpass, 
                                       'xfname'=>$fname,
                                       'xposition'=>$position,
+                                      'xcard'=>$card,
                                       'xauth'=>$auth,
                                       'xprim'=>$prim,
                                       'xavatar'=>$avatar)) ; 
@@ -285,7 +293,7 @@ if($do == 'mange'){
  //-------------------------------------------------------------- 
   }  elseif  ($do == 'edit'){
 
- //-------GET methon-----------------------------------------------------
+ //-------GET methon----------------------------------------------------
                                 
     
       $userid = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']):0;
@@ -303,24 +311,28 @@ if($do == 'mange'){
 
             <!--form ----------------------------------------------------->
            
-                 <h1 class="text-center" style="margin-top:50px">Edit Member</h1><hr>
+                 <h1 class="text-center" style="margin-top:50px">Edit user</h1><hr>
                
                    
                  <form class="form-horizontal  " action="?do=update" method="post"  enctype="multipart/form-data">
    
                         <input  type= hidden name='userid' value="<?php echo $row['id']?>"  />
                         <label>User</label>
-                        <input type="text" name='name' value="<?php echo $row['user']?>"class='form-control' autocomplete='off' required='required'/>
+                        <input type="text" name='user' value="<?php echo $row['user']?>"class='form-control' autocomplete='off' required='required'/>
 
                         <label>Password</label>
                         <input type=hidden  name='oldpass' value="<?php echo $row['pass']?>"  a/>
                         <input type="password" name='newpass'  class= 'form-control' autocomplete="new-password"/>
 
                         <label>Full name</label>
-                        <input type="name" name='fullname' value="<?php echo $row['name']?>" class= 'form-control' required='required'/>
+                        <input type="name" name='fname' value="<?php echo $row['fname']?>" class= 'form-control' required='required'/>
 
                         <label>Position</label>
                         <input type="text" name='position' value="<?php echo $row['position']?>" class= 'form-control' required='required'/>
+
+                        <label>Card</label>
+                        <input type="text" name='card' value="<?php echo $row['card']?>" class= 'form-control' required='required'/>
+
 
                          <!---select auth---------------------> 
                          <div class="form-group">
@@ -340,11 +352,14 @@ if($do == 'mange'){
                                         
                                     </select>
                                   </div>
-                     
+                    
                             <div class= "mge-tab2 text-center">
                              <img  src="upload/avatar/<?php echo $row['avatar'];?>"alt="<?php echo $row['avatar'];?>">
-                             <input type="file" name="avatar"   />    
+                             <input type="file" name="avatar"  class= 'form-control'  />    
                             </div>
+                            
+                            
+                     
                      
                         
                      <button class='btn btn-success ' style="margin-top:10px;">Save</button>
@@ -366,39 +381,39 @@ if($do == 'mange'){
 //-------------Update page-------------------------------------
  //--------------------------------------------------------------   
     }elseif ($do == 'update'){
-      
-     
-        
-            
+       
 
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
-        echo'<h1  style="  margin-left: 60px ; margin-top:50px">Update Member</h1><hr>';
+
+        echo'<h1  style="  margin-left: 60px ; margin-top:50px">Update User</h1><hr>';
             
             //get var----------------------
-            $id        =$_POST['userid'];
-            $name      =$_POST['name'];
-            $fname     =$_POST['fullname'];
-            $position  =$_POST['position'];
+            $id        = $_POST['userid'];
+            $user      = $_POST['user'];
+            $fname     = $_POST['fname'];
+            $position  = $_POST['position'];
+            $card      = $_POST['card'];
             $auth      = $_POST['auth'];
             $prim      = $_POST['prim']; 
-                //get var image file-------------  
-               $avatar = $_FILES["avatar"];
             
-                //get attr array ------------------- 
-                 $nameav = $avatar["name"];
-                 $sizeav = $avatar["size"];
-                 $typeav = $avatar["type"];
-                 $tmp_nameav =  $avatar["tmp_name"];
+                //get var image file-------------  
+                $avatar = $_FILES["avatar"];
+                
+            
+             //   get attr array ------------------- 
+                $nameav = $avatar["name"];
+          
+                $sizeav = $avatar["size"];
+                $typeav = $avatar["type"];
+                $tmp_nameav =  $avatar["tmp_name"];
                    
-                //extantion allow to upload--------
+              //  extantion allow to upload--------
                  $avatarallow=array("jpg","jpeg","png","gif");
                    
+               
                  $avatarex = explode('.', $nameav);
                  $avatarexend= end($avatarex) ;
                   
-               
-            
-            
             
            //get password(old/new)----------------------- 
            $pass=  empty($_POST['newpass'])?$_POST['oldpass']:sha1($_POST['newpass']);
@@ -406,14 +421,14 @@ if($do == 'mange'){
             $error = array();
             
                
-             if (strlen($name)>20){
+             if (strlen($user)>20){
                 $error[] =  " Name more than 20 char";
             }
-              if (strlen($name) <2){
+              if (strlen($user) <2){
                 $error[] =  " Name less than 2 char";
             }
             
-            if (empty($name)){
+            if (empty($user)){
                 $error[] =  "Empty Name";
             }
           
@@ -423,10 +438,16 @@ if($do == 'mange'){
                 if (empty($position)){
                   $error[] = "Empty Position";
             }
-            if (!empty($avatarexend))
+            
+          if (!empty($avatarexend)){
+
               if (!in_array($avatarexend,$avatarallow)){
                          $error[] = "Not allow extension";
                    }
+                   if ($sizeav >10000000){
+                    $error[] = "Image Size is larger than 10mb";
+                       
+              }}
             foreach($error as $errmg){
              
                //-redirect to back ---------------------
@@ -434,23 +455,30 @@ if($do == 'mange'){
             }
               
               if (empty($error)){
-                  if (!empty($avatarexend)){
+
+                $stmt = $con->prepare('SELECT * FROM user WHERE  id != ? ') ;
+                $stmt ->execute(array( $id)) ; 
+                $row = $stmt ->fetch(); 
+                
+               
+                  if ($nameav == $row['avatar'] ){
                   
                    // name random file------------  
                    $avatar=rand(0,1000000) . '_' . $nameav;
                     //upload file------------------  
                     move_uploaded_file($tmp_nameav,'upload\avatar\\' . $avatar);
+                    echo "not same";
                   }else{
                       
                     $stmt = $con->prepare('SELECT * FROM user WHERE  id != ? ') ;
                     $stmt ->execute(array( $id)) ; 
                     $row = $stmt ->fetch(); 
                     $avatar=$row['avatar'];
-                  }
+                  } 
                   //select name & id for exist ---------------
                   
-                    $stmt = $con->prepare('SELECT * FROM user WHERE name = ? AND id != ? ') ;
-                    $stmt ->execute(array( $name ,$id)) ; 
+                    $stmt = $con->prepare('SELECT * FROM user WHERE user = ? AND id != ? ') ;
+                    $stmt ->execute(array( $user ,$id)) ; 
                     $cou = $stmt ->rowcount();   
                   
                   if ($con !== 1){
@@ -458,15 +486,15 @@ if($do == 'mange'){
                     
          
             //update data-----------------------
-            $stmt = $con->prepare('UPDATE user SET user= ?,name= ?,position=?, pass=?,auth=?,prim=? ,avatar=? where id= ?' ) ;
-            $stmt ->execute(array( $name, $fname ,$position,$pass ,$auth,$prim,$avatar,$id)) ; 
+            $stmt = $con->prepare('UPDATE user SET user= ?,fname= ?,position=?,card=? ,pass=?,auth=?,prim=? ,avatar=? where id= ?' ) ;
+            $stmt ->execute(array( $user, $fname ,$position,$card,$pass ,$auth,$prim,$avatar,$id)) ; 
             $cou = $stmt ->rowcount();  
             //echo sucsess--------------------------
-      
+       
            
               $mge =  $cou . '   Update'; 
                //-redirect to back---------------------
-               redirhome($mge,'info','users.php?do=mange');
+               redirhome($mge,'info','users.php?do=mange',11);
                       
                   }else{
                        

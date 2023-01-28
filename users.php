@@ -461,13 +461,13 @@ if($do == 'mange'){
                 $row = $stmt ->fetch(); 
                 
                
-                  if ($nameav == $row['avatar'] ){
+                  if (!empty($avatarexend)){
                   
                    // name random file------------  
                    $avatar=rand(0,1000000) . '_' . $nameav;
                     //upload file------------------  
                     move_uploaded_file($tmp_nameav,'upload\avatar\\' . $avatar);
-                    echo "not same";
+                    
                   }else{
                       
                     $stmt = $con->prepare('SELECT * FROM user WHERE  id != ? ') ;
@@ -494,7 +494,7 @@ if($do == 'mange'){
            
               $mge =  $cou . '   Update'; 
                //-redirect to back---------------------
-               redirhome($mge,'info','users.php?do=mange',11);
+               redirhome($mge,'info','users.php?do=mange');
                       
                   }else{
                        

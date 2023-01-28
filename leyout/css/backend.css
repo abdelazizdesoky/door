@@ -1,0 +1,279 @@
+/*---Genral------------------------------------------------*/
+
+
+body{
+
+    color: #131313;
+    background-color: #6e6e6e;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cpolygon fill='%23cc0000' points='957 450 539 900 1396 900'/%3E%3Cpolygon fill='%23aa0000' points='957 450 872.9 900 1396 900'/%3E%3Cpolygon fill='%23d6002b' points='-60 900 398 662 816 900'/%3E%3Cpolygon fill='%23b10022' points='337 900 398 662 816 900'/%3E%3Cpolygon fill='%23d9004b' points='1203 546 1552 900 876 900'/%3E%3Cpolygon fill='%23b2003d' points='1203 546 1552 900 1162 900'/%3E%3Cpolygon fill='%23d3006c' points='641 695 886 900 367 900'/%3E%3Cpolygon fill='%23ac0057' points='587 900 641 695 886 900'/%3E%3Cpolygon fill='%23c4008c' points='1710 900 1401 632 1096 900'/%3E%3Cpolygon fill='%239e0071' points='1710 900 1401 632 1365 900'/%3E%3Cpolygon fill='%23aa00aa' points='1210 900 971 687 725 900'/%3E%3Cpolygon fill='%23880088' points='943 900 1210 900 971 687'/%3E%3C/svg%3E");
+background-attachment: fixed;
+background-size: cover;
+}
+h5{
+  margin-top:50px;  
+    
+}
+
+/*  showpassword-----------------------------------*/
+.logpass{
+    position: relative
+}
+.logpass .showpass {
+    position:absolute;
+    right: 0;
+    bottom:25%;
+    right: 3%;
+}
+
+/*
+    <label class="switch">
+     <input type="checkbox">
+      <span class="slider round"></span>
+      </label>
+*/
+/*----dachbord----------------------------*/
+/*----switch----------------------------*/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+   
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #21f359;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #21f359;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  /*----switch----------------------------*/
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+
+.dachccom  .com-u  {
+ 
+margin-bottom: 20px;
+    top: 0px;
+}
+
+
+
+
+.dachccom  .com-p {
+    display: inline-block;
+    position: relative;
+	background: #c9c9c9;
+    border-radius: .4em;
+    padding: 15px;
+    margin-right: 12px;
+    margin-left: 50px;
+}
+
+.dachccom  .com-p:after{
+    content: '';
+	position: absolute;
+	left: 29px;
+     top:90%;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+	border-right-color: #c9c9c9;
+	border-left: 0;
+	margin-top: -39px;
+	margin-left: -39px;
+}
+
+.border-left-success {
+    border-left: .55rem solid #1cc88a!important;
+}
+.border-left-primary {
+    border-left: .55rem solid #4e73df!important;
+}
+.border-left-info {
+    border-left: .55rem solid #36b9cc!important;
+}
+.border-left-warning {
+    border-left: .55rem solid #f6c23e!important;
+}
+
+/*member----------------------------------------------------*/
+
+.table-dark.table-bordered {
+    border: 0;
+    box-shadow: 10px 10px 10px #2b2929;
+}
+    .mge-tab img {
+        width: 60px;
+        height: 40px;
+        border-radius:50%;
+    }
+.mge-tab2{
+    margin-top :25px;
+    border:2px solid #fff;
+}
+  .mge-tab2 img {
+        width: 100px;
+        height: 80px;
+      
+    }
+    
+
+.showpass{
+    float: inline-end;
+}
+
+.delete{
+     
+    margin-right: 5px;
+}
+/* Gategorye-------------------- */
+.sub {
+    color :#300fdb;
+    
+}
+ .sub:before {
+    content:" - "    ;
+    }
+
+.sub_main{
+  margin-top:10px;
+    margin-bottom: 10px;
+   
+     
+}
+
+.sub_delet{
+    color: red;
+    margin-left: 50px;
+}
+/*---------------*/
+.visible{
+    margin-top: 20px;
+}
+
+.col-sm-10  {
+    padding-left: 130px;
+    overflow: hidden;
+} 
+.cate-mag {
+   
+    border:1px solid #959ba2ab;
+    background-color:#959ba2ab;
+    border-radius: 15px;
+    box-shadow: 10px 10px 10px;
+   
+    
+}
+.category .cate-mag .row-cate{
+    padding-left:20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+     transition:all 1s ease-in-out ;
+    padding-bottom: 20px; 
+   position: relative;
+   overflow: hidden;
+   
+}
+.category .cate-mag .btn-cate{
+position: absolute;
+top: 41px;
+right: -162px;;
+ transition:all 1s ease-in-out ;
+}
+.category  .row-cate:hover  {
+    background-color: #9e9e9e;
+    border-radius: 5px;
+   box-shadow: 10px 10px 10px;
+    transform: scale(1.02)
+}
+
+.category  .row-cate:hover .btn-cate {
+    right: 10px;
+}
+
+.category .cate-mag .row-cate:last-of-type ~hr {
+   display: none;
+}
+
+.btn-mng{
+    margin-top: 20px;
+     
+}
+
+
+ .delete {
+   margin-left: 5px;
+
+  
+}
+.category .cate-mag .row-cate .visi,.comm,.ads{
+    padding:5px;
+    border-radius:10px;
+    margin:2px;
+    
+}
+.category .cate-mag .row-cate .visi{
+    background-color: white;
+}
+.category .cate-mag .row-cate .comm{
+ background-color: yellowgreen;   
+}
+.category .cate-mag .row-cate .ads{
+background-color: royalblue;  
+}
+
+.ordering{
+    margin-right:10px;
+}
+
+.ordering a{
+    color:white;
+        margin-left:7px;
+
+}
+
